@@ -10,27 +10,20 @@ from src.helpers import (create_guid,
                          create_ifcpolyline)
 
 
-# IFC template creation
-filename = "output.ifc"
-timestamp = time.time()
-timestring = time.strftime("%Y-%m-%dT%H:%M:%S", time.gmtime(timestamp))
-creator = "Amritpal Singh"
-organization = "Great Developer"
-application, application_version = "IfcOpenShell", "0.5"
-project_globalid, project_name = create_guid(), "Experimenting"
+filename="output.ifc"
 
 # Write the template to a temporary file 
 temp_handle, temp_filename = tempfile.mkstemp(suffix=".ifc")
 template = get_template(
     filename=filename,
-    timestamp=timestamp,
-    timestring=timestring,
-    creator=creator,
-    organization=organization,
-    application=application,
-    application_version=application_version,
-    project_globalid=project_globalid,
-    project_name=project_name
+    timestamp=time.time(),
+    timestring=time.strftime("%Y-%m-%dT%H:%M:%S", time.gmtime(time.time())),
+    creator="Amritpal Singh",
+    organization="Great Developer",
+    application="IfcOpenShell",
+    application_version="0.5",
+    project_globalid=create_guid(),
+    project_name="My project"
 )
 with open(temp_filename, "wb") as f:
     f.write(template)

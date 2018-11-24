@@ -1,5 +1,3 @@
-
-
 def get_template(**kwargs):
     template = """ISO-10303-21;
     HEADER;
