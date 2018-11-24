@@ -7,8 +7,7 @@ from src.template import get_template
 from src.helpers import (create_guid,
                          create_ifclocalplacement,
                          create_ifcaxis2placement,
-                         create_ifcpolyline,
-                         create_ifcextrudedareasolid)
+                         create_ifcpolyline)
 
 
 # IFC template creation
