@@ -42,3 +42,16 @@ def create_ifcpolyline(ifcfile,
         ifcpts.append(point)
     polyline = ifcfile.createIfcPolyLine(ifcpts)
     return polyline
+
+
+def get_attributes_and_its_type_of_ifc_entity(entity):
+    """ Prints all the attributes and there type of given ifc entity."""
+    ifc_entity = ifcopenshell.create_entity(entity)
+    i = 0
+    while True:
+        try:
+            print(ifc_entity.attribute_name(i),
+                  ifc_entity.attribute_type(i))
+            i += 1
+        except:
+            break

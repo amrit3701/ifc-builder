@@ -56,7 +56,7 @@ ifcfile.createIfcRelAggregates(
     GlobalId=create_guid(),
     OwnerHistory=owner_history,
     RelatingObject=site,
-    RelatedObjects=[building]
+    RelatedObjects=(building,)
 )
 
 ifcfile.write(filename)
