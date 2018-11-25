@@ -1,6 +1,7 @@
 import uuid
 import time
 import tempfile
+from config import *
 
 import ifcopenshell
 from src.template import get_template
@@ -11,20 +12,19 @@ from src.helpers import (create_guid,
                          create_3d_grid)
 
 
-filename="output.ifc"
 
 # Write the template to a temporary file 
 temp_handle, temp_filename = tempfile.mkstemp(suffix=".ifc")
 template = get_template(
-    filename=filename,
+    filename=FILE_NAME,
     timestamp=time.time(),
     timestring=time.strftime("%Y-%m-%dT%H:%M:%S", time.gmtime(time.time())),
-    creator="Amritpal Singh",
-    organization="Great Developer",
+    creator=CREATOR,
+    organization=ORGANISATION,
     application="IfcOpenShell",
     application_version="0.5",
     project_globalid=create_guid(),
-    project_name="My project"
+    project_name=PROJECT_NAME
 )
 with open(temp_filename, "wb") as f:
     f.write(template)
@@ -39,18 +39,18 @@ site_placement = create_ifclocalplacement(ifcfile)
 site = ifcfile.createIfcSite(
     GlobalId=create_guid(), 
     OwnerHistory=owner_history,
-    Name="Site", 
+    Name=SITE_NAME, 
     ObjectPlacement=site_placement,
-    CompositionType="COMPLEX"
+    CompositionType=SITE_COMP
 )
 
 building_placement = create_ifclocalplacement(ifcfile, relative_to=site_placement)
 building = ifcfile.createIfcBuilding(
     GlobalId=create_guid(),
     OwnerHistory=owner_history,
-    Name='Building',
+    Name=BUILD_NAME,
     ObjectPlacement=building_placement,
-    CompositionType="COMPLEX"
+    CompositionType=BUILD_COMP
 )
 
 ifcfile.createIfcRelAggregates(
@@ -61,4 +61,4 @@ ifcfile.createIfcRelAggregates(
 )
 
 create_3d_grid(ifcfile, 10, 8)
-ifcfile.write(filename)
+ifcfile.write(FILE_NAME)
