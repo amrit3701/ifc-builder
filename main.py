@@ -7,7 +7,8 @@ from src.template import get_template
 from src.helpers import (create_guid,
                          create_ifclocalplacement,
                          create_ifcaxis2placement,
-                         create_ifcpolyline)
+                         create_ifcpolyline,
+                         create_3d_grid)
 
 
 filename="output.ifc"
@@ -59,4 +60,5 @@ ifcfile.createIfcRelAggregates(
     RelatedObjects=(building,)
 )
 
+create_3d_grid(ifcfile, 10, 8)
 ifcfile.write(filename)

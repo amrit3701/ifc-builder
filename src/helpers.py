@@ -1,7 +1,7 @@
 import uuid
 
 import ifcopenshell
-
+from .models import Vector
 
 O = 0., 0., 0.
 X = 1., 0., 0.
@@ -42,6 +42,68 @@ def create_ifcpolyline(ifcfile,
         ifcpts.append(point)
     polyline = ifcfile.createIfcPolyLine(ifcpts)
     return polyline
+
+
+def create_3d_grid(ifcfile,
+                   section_xaxis=5,
+                   section_yaxis=3,
+                   section_zaxis=2):
+    polylines = []
+    xaxis_grids = []
+    yaxis_grids = []
+    dis_bw_sections = 10.0
+    # Create grid in x-y plane
+
+    # create x-axis lines
+    vec1 = Vector(0.0, dis_bw_sections, 0.0)
+    vec2 = Vector(dis_bw_sections * section_xaxis + dis_bw_sections, dis_bw_sections, 0.0)
+    for i in range(section_yaxis):
+        pt1 = ifcfile.createIfcCartesianPoint(vec1.get_tuple())
+        pt2 = ifcfile.createIfcCartesianPoint(vec2.get_tuple())
+        vec1.y += dis_bw_sections
+        vec2.y += dis_bw_sections
+        polyline = ifcfile.createIfcPolyLine((pt1, pt2,))
+        grid_axis = ifcfile.createIfcGridAxis('x{}'.format(i),
+                                          polyline, True)
+        polylines.append(polyline)
+        xaxis_grids.append(grid_axis)
+
+    # create y-axis lines
+    vec1 = Vector(dis_bw_sections, 0.0, 0.0)
+    vec2 = Vector(dis_bw_sections, dis_bw_sections * section_yaxis + dis_bw_sections, 0.0)
+    for i in range(section_xaxis):
+        pt1 = ifcfile.createIfcCartesianPoint(vec1.get_tuple())
+        pt2 = ifcfile.createIfcCartesianPoint(vec2.get_tuple())
+        vec1.x += dis_bw_sections
+        vec2.x += dis_bw_sections
+        polyline = ifcfile.createIfcPolyLine((pt1, pt2,))
+        grid_axis = ifcfile.createIfcGridAxis('y{}'.format(i),
+                                          polyline, True)
+        polylines.append(polyline)
+        yaxis_grids.append(grid_axis)
+
+    placement = create_ifclocalplacement(ifcfile)
+    geometric_curve_set = ifcfile.createIfcGeometricCurveSet(polylines)
+    geometric_representation_context = ifcfile.by_type('IfcGeometricRepresentationContext')[0]
+    shape_representation = ifcfile.createIfcShapeRepresentation(
+        ContextOfItems = geometric_representation_context,
+        RepresentationIdentifier = 'FootPrint',
+        RepresentationType = 'GeometricCurveSet',
+        Items = polylines
+    )
+    product_definition_shape = ifcfile.createIfcProductDefinitionShape(
+        Representations = (shape_representation, )
+    )
+    owner_history = ifcfile.by_type("IfcOwnerHistory")[0]
+    grid = ifcfile.createIfcGrid(
+        GlobalId = create_guid(),
+        OwnerHistory = owner_history,
+        Name = 'Axes',
+        ObjectPlacement = placement,
+        Representation = product_definition_shape,
+        UAxes = xaxis_grids,
+        VAxes = yaxis_grids
+    )
 
 
 def get_attributes_and_its_type_of_ifc_entity(entity):
