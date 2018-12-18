@@ -3,12 +3,14 @@ import uuid
 import ifcopenshell
 from .models import Vector
 
+
 O = 0., 0., 0.
 X = 1., 0., 0.
 Y = 0., 1., 0.
 Z = 0., 0., 1.
 
 create_guid = lambda: ifcopenshell.guid.compress(uuid.uuid1().hex)
+
 
 def create_ifcaxis2placement(ifcfile,
                              point=O,
@@ -22,6 +24,7 @@ def create_ifcaxis2placement(ifcfile,
     axis2placement = ifcfile.createIfcAxis2Placement3D(point, dir1, dir2)
     return axis2placement
 
+
 def create_ifclocalplacement(ifcfile,
                              point=O,
                              dir1=Z,
@@ -32,6 +35,7 @@ def create_ifclocalplacement(ifcfile,
     axis2placement = create_ifcaxis2placement(ifcfile,point,dir1,dir2)
     ifclocalplacement2 = ifcfile.createIfcLocalPlacement(relative_to,axis2placement)
     return ifclocalplacement2
+
 
 def create_ifcpolyline(ifcfile,
                        point_list):
@@ -64,7 +68,7 @@ def create_3d_grid(ifcfile,
         vec2.y += dis_bw_sections
         polyline = ifcfile.createIfcPolyLine((pt1, pt2,))
         grid_axis = ifcfile.createIfcGridAxis('x{}'.format(i),
-                                          polyline, True)
+                                              polyline, True)
         polylines.append(polyline)
         xaxis_grids.append(grid_axis)
 
@@ -78,7 +82,7 @@ def create_3d_grid(ifcfile,
         vec2.x += dis_bw_sections
         polyline = ifcfile.createIfcPolyLine((pt1, pt2,))
         grid_axis = ifcfile.createIfcGridAxis('y{}'.format(i),
-                                          polyline, True)
+                                              polyline, True)
         polylines.append(polyline)
         yaxis_grids.append(grid_axis)
 
@@ -86,23 +90,23 @@ def create_3d_grid(ifcfile,
     geometric_curve_set = ifcfile.createIfcGeometricCurveSet(polylines)
     geometric_representation_context = ifcfile.by_type('IfcGeometricRepresentationContext')[0]
     shape_representation = ifcfile.createIfcShapeRepresentation(
-        ContextOfItems = geometric_representation_context,
-        RepresentationIdentifier = 'FootPrint',
-        RepresentationType = 'GeometricCurveSet',
-        Items = polylines
+        ContextOfItems=geometric_representation_context,
+        RepresentationIdentifier='FootPrint',
+        RepresentationType='GeometricCurveSet',
+        Items=polylines
     )
     product_definition_shape = ifcfile.createIfcProductDefinitionShape(
-        Representations = (shape_representation, )
+        Representations=(shape_representation, )
     )
     owner_history = ifcfile.by_type("IfcOwnerHistory")[0]
     grid = ifcfile.createIfcGrid(
-        GlobalId = create_guid(),
-        OwnerHistory = owner_history,
-        Name = 'Axes',
-        ObjectPlacement = placement,
-        Representation = product_definition_shape,
-        UAxes = xaxis_grids,
-        VAxes = yaxis_grids
+        GlobalId=create_guid(),
+        OwnerHistory=owner_history,
+        Name='Axes',
+        ObjectPlacement=placement,
+        Representation=product_definition_shape,
+        UAxes=xaxis_grids,
+        VAxes=yaxis_grids
     )
 
 
