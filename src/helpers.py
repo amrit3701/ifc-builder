@@ -82,7 +82,21 @@ def create_3d_grid(ifcfile,
         polylines.append(polyline)
         yaxis_grids.append(grid_axis)
 
-    placement = create_ifclocalplacement(ifcfile)
+    # create z-axis lines
+    vec1 = Vector(0.0, dis_bw_sections, 0.0)
+    vec2 = Vector(dis_bw_sections * section_yaxis + dis_bw_sections, dis_bw_sections, 0.0)
+    for i in range(section_zaxis):
+        pt1 = ifcfile.createIfcCartesianPoint(vec1.get_tuple())
+        pt2 = ifcfile.createIfcCartesianPoint(vec2.get_tuple())
+        vec1.z += dis_bw_sections
+        vec2.z += dis_bw_sections
+        polyline = ifcfile.createIfcPolyLine((pt1, pt2,))
+        grid_axis = ifcfile.createIfcGridAxis('z{}'.format(i),
+                                          polyline, True)
+        polylines.append(polyline)
+        zaxis_grids.append(grid_axis)
+
+    placement = create_ifcaxis2placement(ifcfile)
     geometric_curve_set = ifcfile.createIfcGeometricCurveSet(polylines)
     geometric_representation_context = ifcfile.by_type('IfcGeometricRepresentationContext')[0]
     shape_representation = ifcfile.createIfcShapeRepresentation(
@@ -102,7 +116,8 @@ def create_3d_grid(ifcfile,
         ObjectPlacement = placement,
         Representation = product_definition_shape,
         UAxes = xaxis_grids,
-        VAxes = yaxis_grids
+        VAxes = yaxis_grids,
+        WAxes = zaxis_grids
     )
 
 
