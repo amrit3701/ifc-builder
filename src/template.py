@@ -1,5 +1,6 @@
 def get_template(**kwargs):
-    template = """ISO-10303-21;
+    template = (
+        """ISO-10303-21;
     HEADER;
     FILE_DESCRIPTION(('ViewDefinition [CoordinationView]'),'2;1');
     FILE_NAME('%(filename)s','%(timestring)s',('%(creator)s'),('%(organization)s'),'%(application)s','%(application)s','');
@@ -28,5 +29,7 @@ def get_template(**kwargs):
     #20=IFCPROJECT('%(project_globalid)s',#5,'%(project_name)s',$,$,$,$,(#11),#19);
     ENDSEC;
     END-ISO-10303-21;
-    """ % kwargs
+    """
+        % kwargs
+    )
     return template
