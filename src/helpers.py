@@ -51,6 +51,7 @@ def create_3d_grid(ifcfile,
     polylines = []
     xaxis_grids = []
     yaxis_grids = []
+    zaxis_grids = []
     dis_bw_sections = 10.0
     # Create grid in x-y plane
 
