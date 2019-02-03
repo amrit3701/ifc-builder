@@ -4,8 +4,8 @@ import tempfile
 
 import ifcopenshell
 
-from .ifc_builder.template import get_template
-from .ifc_builder.helpers import (
+from ifc_builder.template import get_template
+from ifc_builder.helpers import (
     create_guid,
     create_ifclocalplacement,
     create_ifcaxis2placement,
