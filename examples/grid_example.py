@@ -8,8 +8,6 @@ from ifc_builder.template import get_template
 from ifc_builder.helpers import (
     create_guid,
     create_ifclocalplacement,
-    create_ifcaxis2placement,
-    create_ifcpolyline,
     create_3d_grid,
 )
 
